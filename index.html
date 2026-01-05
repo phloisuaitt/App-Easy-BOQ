@@ -23,5 +23,98 @@
 </head>
   <body class="bg-gray-50">
     <div id="root"></div>
+    <script type="module">
+  import React from "react";
+  import { createRoot } from "react-dom/client";
+
+  const App = () => {
+    const [form, setForm] = React.useState({
+      width: "",
+      length: "",
+      depth: "",
+      type: "ขุด"
+    });
+
+    const volume =
+      Number(form.width) *
+      Number(form.length) *
+      Number(form.depth);
+
+    return React.createElement(
+      "div",
+      { className: "max-w-xl mx-auto mt-16 bg-white p-6 rounded shadow" },
+
+      React.createElement(
+        "h1",
+        { className: "text-2xl font-semibold text-center mb-6" },
+        "เครื่องมือคำนวณงานดิน"
+      ),
+
+      /* ประเภทงาน */
+      React.createElement(
+        "div",
+        { className: "mb-4" },
+        React.createElement("label", { className: "block mb-1" }, "ประเภทงาน"),
+        React.createElement(
+          "select",
+          {
+            className: "border p-2 w-full",
+            value: form.type,
+            onChange: e =>
+              setForm({ ...form, type: e.target.value })
+          },
+          React.createElement("option", null, "ขุด"),
+          React.createElement("option", null, "ถม")
+        )
+      ),
+
+      /* ขนาด */
+      ["width", "length", "depth"].map((key, i) =>
+        React.createElement(
+          "div",
+          { className: "mb-4", key },
+          React.createElement(
+            "label",
+            { className: "block mb-1" },
+            key === "width"
+              ? "ความกว้าง (ม.)"
+              : key === "length"
+              ? "ความยาว (ม.)"
+              : "ความลึก (ม.)"
+          ),
+          React.createElement("input", {
+            type: "number",
+            className: "border p-2 w-full",
+            value: form[key],
+            onChange: e =>
+              setForm({ ...form, [key]: e.target.value })
+          })
+        )
+      ),
+
+      /* ผลลัพธ์ */
+      React.createElement(
+        "div",
+        { className: "mt-6 p-4 bg-gray-100 rounded text-center" },
+        React.createElement(
+          "p",
+          { className: "text-lg font-medium" },
+          `ปริมาณงานดิน (${form.type})`
+        ),
+        React.createElement(
+          "p",
+          { className: "text-2xl font-semibold mt-2" },
+          isNaN(volume) || volume === 0
+            ? "–"
+            : volume.toFixed(2) + " ลบ.ม."
+        )
+      )
+    );
+  };
+
+  const root = createRoot(document.getElementById("root"));
+  root.render(React.createElement(App));
+</script>
   </body>
 </html>
+
